@@ -58,7 +58,6 @@ describe('Create Todo Item', () => {
   });
 });
 
-
 describe('Update Todo Item', () => {
   let location;
 
@@ -81,6 +80,29 @@ describe('Update Todo Item', () => {
 
   after(() => {
     return del(url);
+  });
+});
+
+describe('Delete Todo Item', () => {
+  let location;
+
+  beforeEach((done) => {
+    post(url, { title: 'Wash Cloths' }).then((res) => {
+      location = res.header['location'];
+      done();
+    });
+  });
+
+  it('should return a 204 NO CONTENT response', () => {
+    let result = del(location);
+    return assert(result, 'status').to.equal(204);
+  });
+
+  it('should delete the item', () => {
+    let result = del(location).then((res) => {
+      return get(location);
+    });
+    return expect(result).to.eventually.be.rejectedWith('Not Found');
   });
 });
 
