@@ -1,14 +1,34 @@
-import chai from 'chai';
-import{ should, expect } from 'chai';
-import Promise from 'bluebird';
-import request from 'superagent-promise';
-import superagent from 'superagent';
+var chai = require('chai'),
+  should = chai.should,
+  expect = chai.expect,
+  Promise = require('bluebird'),
+  req = require('superagent-promise')(require('superagent'), Promise),
+  chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 
-const req = request(superagent, Promise);
+let url = process.env.URL || 'http://localhost:8000/todos';
 
-import chaiAsPromised from 'chai-as-promised';
+describe('Cross Origin Requests', () => {
+  var result;
 
-let url = process.env.URL || 'http://localhost:8000/todo';
+  before(() => {
+    result = req('OPTIONS', url)
+      .set('Origin', 'http://someplace.com')
+      .end();
+  });
+
+  it('should return the correct CORS headers', () => {
+    return assert(result, 'header').to.contain.all.keys([
+      'access-control-allow-origin',
+      'access-control-allow-methods',
+      'access-control-allow-headers',
+    ]);
+  });
+
+  it('should allow all origins', () => {
+    return assert(result, 'header.access-control-allow-origin').to.equal('*');
+  });
+});
 
 const post = (url, data) => {
   return req.post(url)
@@ -34,4 +54,8 @@ const update = (url, method, data) => {
     .set('Accept', 'application/json')
     .send(data)
     .end();
+};
+
+const assert = (result, prop) => {
+  return expect(result).to.eventually.have.deep.property(prop);
 };
