@@ -9,7 +9,7 @@ chai.use(chaiAsPromised);
 let url = process.env.URL || 'http://localhost:8000/todos';
 
 describe('Cross Origin Requests', () => {
-  var result;
+  let result;
 
   before(() => {
     result = req('OPTIONS', url)
@@ -27,6 +27,34 @@ describe('Cross Origin Requests', () => {
 
   it('should allow all origins', () => {
     return assert(result, 'header.access-control-allow-origin').to.equal('*');
+  });
+});
+
+describe('Create Todo Item', () => {
+  let result;
+
+  before(() => {
+    result = post(url, { title: 'Wash Cloths' });
+  });
+
+  it('should return a 201 CREATED response', () => {
+    return assert(result, 'status').to.equal(201);
+  });
+
+  it('should receive a location hyperlink', () => {
+    return assert(result, 'header.location').to.match(/^https?:\/\/.+\/todos\/[\d]+$/);
+  });
+
+  it('should create the item', () => {
+    let item = result.then((res) => {
+      return get(res.header['location']);
+    });
+
+    return assert(item, 'body.title').that.equals('Wash Cloths');
+  });
+
+  after(() => {
+    return del(url);
   });
 });
 
