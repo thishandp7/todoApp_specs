@@ -58,6 +58,32 @@ describe('Create Todo Item', () => {
   });
 });
 
+
+describe('Update Todo Item', () => {
+  let location;
+
+  beforeEach((done) => {
+    post(url, { title: 'Wash Cloths' }).then((res) => {
+      location = res.header['location'];
+      done();
+    });
+  });
+
+  it('should have completed to true after PUT update', () => {
+    let result = update(location, 'PUT', {'completed': true});
+    return assert(result, 'body.completed').to.be.true;
+  });
+
+  it('should have completed to true after PATCH update', () => {
+    let result = update(location, 'PATCH', {'completed': true});
+    return assert(result, 'body.completed').to.be.true;
+  });
+
+  after(() => {
+    return del(url);
+  });
+});
+
 const post = (url, data) => {
   return req.post(url)
     .set('Content-Type', 'application/json')
