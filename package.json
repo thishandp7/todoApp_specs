@@ -1,0 +1,38 @@
+{
+  "name": "todoApp_specs",
+  "version": "1.0.0",
+  "description": "Acceptance tests for todobackend",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "babel":{
+    "presets":[
+      "env"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thishandp7/todoApp_specs.git"
+  },
+  "author": "Thishan D Pathmanathan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thishandp7/todoApp_specs/issues"
+  },
+  "homepage": "https://github.com/thishandp7/todoApp_specs#readme",
+  "dependencies": {
+    "babel-preset-env": "^1.7.0",
+    "bluebird": "^3.5.1",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^5.2.0",
+    "mocha-jenkins-reporter": "^0.3.12",
+    "superagent": "^3.8.3",
+    "superagent-promise": "^1.1.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1"
+  }
+}
