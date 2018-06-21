@@ -11,6 +11,8 @@ let url = process.env.URL || 'http://localhost:8000/todos';
 describe('Cross Origin Requests', () => {
   let result;
 
+  console.info('This is the URL: ', url);
+
   before(() => {
     result = req('OPTIONS', url)
       .set('Origin', 'http://someplace.com')
